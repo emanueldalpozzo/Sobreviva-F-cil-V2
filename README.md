@@ -43,8 +43,27 @@ Expansão do aplicativo com automações, alertas nativos e curadoria de conteú
 - [ ] **Tutoriais de Manutenção:** Manuais passo a passo para pequenos reparos domésticos (ex: resistência de chuveiro, desentupimentos).
 - [ ] **SOS Casa:** Diretório local para salvar contatos de chaveiros, encanadores e imobiliária.
 
+## 2. Protótipo de Telas (Wireframes)
 
-## 2. Modelagem do Banco
+Para a validação visual do MVP, foram projetadas as três interfaces principais que compõem o fluxo de navegação primário do aplicativo (Bottom Tab Navigation):
+
+1.  **Início (Home):** Painel geral com o progresso diário, tarefas prioritárias e resumo rápido do saldo.
+2.  **Minha Rotina (Tarefas):** Gestão detalhada com filtros de frequência (Diário, Semanal, Mensal) e funcionalidade de conclusão.
+3.  **Controle Financeiro (Finanças):** Visão centralizada de receitas, despesas fixas e controle de vencimentos iminentes.
+
+Abaixo está o mapa de telas com a proposta de layout:
+
+
+![Tela Home](./img/telaHome.png)
+![Tela Tarefas](./img/telaTarefas.png)
+![Tela Nova Tarefa](./img/novaTarefa.png)
+![Tela Finanças](./img/telaFinanças.png)
+![Tela Nova Transição](./img/telaNovaTransicao.png)
+
+
+
+
+## 3. Modelagem do Banco
 
 #### Arquitetura e Tecnologia de Persistência
 
@@ -139,7 +158,7 @@ erDiagram
 *   Uma **`TRANSACTION_CATEGORY`** pode classificar várias **`TRANSACTIONs`** (1:N), enquanto cada transação pertence a uma categoria.
 
 
-## 3. Planejamento de Sprints
+## 4. Planejamento de Sprints
 
 O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo de **6 semanas**, dividido em Sprints semanais. O projeto será desenvolvido do zero utilizando Expo, React Native e TypeScript, evoluindo desde a estrutura inicial e prototipação até a implementação das funcionalidades, persistência local, testes e preparação da entrega final.
 
