@@ -53,15 +53,7 @@ Para a validação visual do MVP, foram projetadas as três interfaces principai
 
 Abaixo está o mapa de telas com a proposta de layout:
 
-
-![Tela Home](./img/telaHome.png)
-![Tela Tarefas](./img/telaTarefas.png)
-![Tela Nova Tarefa](./img/novaTarefa.png)
-![Tela Finanças](./img/telaFinanças.png)
-![Tela Nova Transição](./img/telaNovaTransacao.png)
-
-
-
+https://drive.google.com/drive/folders/1iu-EkkS6WrUfzXtAAFUxHWwURFXNs_35?usp=sharing
 
 ## 3. Modelagem do Banco
 
