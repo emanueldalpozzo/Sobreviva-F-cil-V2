@@ -58,7 +58,7 @@ Abaixo está o mapa de telas com a proposta de layout:
 ![Tela Tarefas](./img/telaTarefas.png)
 ![Tela Nova Tarefa](./img/novaTarefa.png)
 ![Tela Finanças](./img/telaFinanças.png)
-![Tela Nova Transição](./img/telaNovaTransicao.png)
+![Tela Nova Transição](./img/telaNovaTransacao.png)
 
 
 
