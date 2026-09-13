@@ -53,7 +53,7 @@ Para a validação visual do MVP, foram projetadas as três interfaces principai
 
 Abaixo está o mapa de telas com a proposta de layout:
 
-https://drive.google.com/drive/folders/1iu-EkkS6WrUfzXtAAFUxHWwURFXNs_35?usp=sharing
+<a href="https://drive.google.com/drive/folders/1iu-EkkS6WrUfzXtAAFUxHWwURFXNs_35?usp=sharing" target="_blank">Visualizar Mapa de Telas no Google Drive</a>
 
 ## 3. Modelagem do Banco
 
