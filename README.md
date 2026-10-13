@@ -158,14 +158,14 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 
 **Objetivo:** criar a base do aplicativo e estabelecer sua arquitetura inicial.
 
-- [ ] Criar o projeto utilizando **Expo + React Native + TypeScript**.
-- [ ] Configurar o **Expo Router**.
-- [ ] Definir a estrutura de pastas do projeto.
+- [x] Criar o projeto utilizando **Expo + React Native + TypeScript**.
+- [x] Configurar o **Expo Router**.
+- [x] Definir a estrutura de pastas do projeto.
 - [ ] Criar as telas principais do aplicativo.
 - [ ] Configurar a navegação utilizando **Tab Navigation** e **Stack Navigation**.
 - [ ] Configurar os arquivos `_layout.tsx`.
-- [ ] Configurar o repositório Git e publicar o projeto no GitHub.
-- [ ] Realizar a primeira execução e validação do aplicativo em Android/iOS.
+- [x] Configurar o repositório Git e publicar o projeto no GitHub.
+- [x] Realizar a primeira execução e validação do aplicativo em Android/iOS.
 
 #### Sprint 2: Prototipação e Interface (Semana 2)
 
