@@ -150,7 +150,76 @@ erDiagram
 *   Uma **`TRANSACTION_CATEGORY`** pode classificar várias **`TRANSACTIONs`** (1:N), enquanto cada transação pertence a uma categoria.
 
 
-## 4. Planejamento de Sprints
+## 4. Arquitetura e Estrutura de Pastas
+
+#### Princípio de organização
+
+O projeto separa **rotas** de **código de apoio**:
+
+*   **`app/`** contém somente as telas e os arquivos `_layout.tsx`. O **Expo Router** utiliza roteamento baseado em arquivos, ou seja, cada arquivo dentro de `app/` se torna uma rota do aplicativo.
+*   **`src/`** contém todo o código que não é uma tela: componentes, acesso ao banco, tipos e constantes.
+
+#### Estrutura de pastas
+
+```
+Sobreviva-F-cil-V2/
+├── app/                        # Rotas do aplicativo (Expo Router)
+│   ├── _layout.tsx             # Stack raiz
+│   ├── (tabs)/                 # Grupo de rotas: navegação por abas
+│   │   ├── _layout.tsx         # Tab Navigation
+│   │   ├── index.tsx           # Início
+│   │   ├── tarefas.tsx         # Minha Rotina
+│   │   └── financas.tsx        # Controle Financeiro
+│   ├── nova-tarefa.tsx         # Tela de Stack
+│   └── nova-transacao.tsx      # Tela de Stack
+├── src/                        # Código de apoio (criado conforme a necessidade)
+│   ├── components/             # Componentes reutilizáveis
+│   ├── database/               # Conexão, criação de tabelas e carga inicial
+│   ├── repositories/           # Funções de consulta e escrita por entidade
+│   ├── hooks/                  # Lógica de estado reutilizável
+│   ├── types/                  # Interfaces e tipos TypeScript
+│   └── constants/              # Cores, espaçamentos e demais constantes
+├── assets/                     # Ícones e imagens do aplicativo
+└── img/                        # Imagens da documentação
+```
+
+A pasta `src/` ainda não possui arquivos no repositório: cada subpasta será criada somente quando houver código para ela.
+
+| Pasta | Responsabilidade | Previsão |
+|---|---|---|
+| `src/components/` | Elementos de interface reutilizados em mais de uma tela | Sprint 2 |
+| `src/constants/` | Cores, tipografia e espaçamentos | Sprint 2 |
+| `src/database/` | Abertura do SQLite, criação das tabelas e carga inicial | Sprint 3 |
+| `src/types/` | Tipos das entidades (`Task`, `Transaction`, `Tip`...) | Sprint 3 |
+| `src/repositories/` | Operações de leitura e escrita de cada entidade | Sprint 3 e 4 |
+| `src/hooks/` | Estado e lógica compartilhados entre telas | Conforme a necessidade |
+
+#### Fluxo entre as camadas
+
+```mermaid
+flowchart LR
+    A["app/ (telas)"] --> B["src/hooks"]
+    B --> C["src/repositories"]
+    C --> D["src/database (SQLite)"]
+```
+
+As telas não executam comandos SQL diretamente. Elas utilizam hooks, que chamam os repositórios, que por sua vez acessam o banco. Dessa forma, uma alteração no banco não exige a reescrita das telas.
+
+#### Decisões e justificativas
+
+*   **Rotas separadas do restante do código:** no Expo Router, todo arquivo dentro de `app/` é interpretado como uma rota. Colocar código de acesso a dados ali geraria rotas indesejadas.
+*   **Sem separação entre frontend e backend:** o aplicativo utiliza **SQLite local** e funciona offline. Não existe servidor, então a camada de dados é apenas uma pasta dentro do próprio aplicativo.
+*   **`src/` ao lado de `app/`:** mantém a estrutura de rotas já existente e concentra todo o código de apoio em um único lugar.
+*   **Pastas criadas sob demanda:** evita uma estrutura vazia que poderia ser alterada ao longo do desenvolvimento.
+
+#### Alternativas consideradas
+
+| Alternativa | Motivo da não adoção |
+|---|---|
+| Pastas `frontend/` e `backend/` dentro de `app/` | Cada arquivo viraria uma rota, e não há servidor no projeto |
+| Mover tudo para `src/app/` | É válida, mas exigiria mover as rotas existentes sem trazer benefício adicional |
+
+## 5. Planejamento de Sprints
 
 O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo de **6 semanas**, dividido em Sprints semanais. O projeto será desenvolvido do zero utilizando Expo, React Native e TypeScript, evoluindo desde a estrutura inicial e prototipação até a implementação das funcionalidades, persistência local, testes e preparação da entrega final.
 
