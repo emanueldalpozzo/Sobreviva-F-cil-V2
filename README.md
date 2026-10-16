@@ -180,7 +180,12 @@ Sobreviva-F-cil-V2/
 │   ├── types/                  # Interfaces e tipos TypeScript
 │   └── constants/              # Cores, espaçamentos e demais constantes
 ├── assets/                     # Ícones e imagens do aplicativo
-└── img/                        # Imagens da documentação
+├── img/                        # Imagens da documentação
+├── global.css                  # Diretivas do Tailwind (NativeWind)
+├── tailwind.config.js          # Configuração do Tailwind e tokens de design
+├── babel.config.js             # Preset do Babel com o NativeWind
+├── metro.config.js             # Integração do NativeWind com o Metro
+└── nativewind-env.d.ts         # Tipagem da propriedade className
 ```
 
 A pasta `src/` ainda não possui arquivos no repositório: cada subpasta será criada somente quando houver código para ela.
@@ -211,6 +216,7 @@ As telas não executam comandos SQL diretamente. Elas utilizam hooks, que chamam
 *   **Sem separação entre frontend e backend:** o aplicativo utiliza **SQLite local** e funciona offline. Não existe servidor, então a camada de dados é apenas uma pasta dentro do próprio aplicativo.
 *   **`src/` ao lado de `app/`:** mantém a estrutura de rotas já existente e concentra todo o código de apoio em um único lugar.
 *   **Pastas criadas sob demanda:** evita uma estrutura vazia que poderia ser alterada ao longo do desenvolvimento.
+*   **Estilização com NativeWind:** o protótipo foi desenvolvido com Tailwind. O NativeWind permite estilizar os componentes do React Native com a mesma nomenclatura de classes e concentrar os tokens de design (cores, tipografia e espaçamentos) em um único arquivo, o `tailwind.config.js`. Foi adotada a versão 4.2.7, estável e compatível com o Expo SDK 57, em conjunto com o Tailwind CSS 3.x.
 
 #### Alternativas consideradas
 
@@ -218,6 +224,7 @@ As telas não executam comandos SQL diretamente. Elas utilizam hooks, que chamam
 |---|---|
 | Pastas `frontend/` e `backend/` dentro de `app/` | Cada arquivo viraria uma rota, e não há servidor no projeto |
 | Mover tudo para `src/app/` | É válida, mas exigiria mover as rotas existentes sem trazer benefício adicional |
+| `StyleSheet` com um arquivo `theme.ts` | Não exige configuração adicional, mas obrigaria a reescrever todos os estilos do protótipo e a manter os valores de design em código separado |
 
 ## 5. Planejamento de Sprints
 
