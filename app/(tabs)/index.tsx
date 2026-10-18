@@ -4,6 +4,7 @@ import Card from "../../src/components/Card";
 import ProgressBar from "../../src/components/ProgressBar";
 import TaskItem from "../../src/components/TaskItem";
 import { tasks } from "../../src/mocks/tasks";
+import { transactions } from "../../src/mocks/transactions";
 import type { Task } from "../../src/types";
 
 const nomeUsuario = "Emanuel";
@@ -12,6 +13,10 @@ const iniciais = "EM";
 // Horários no formato "HH:MM" podem ser comparados como texto
 function estaAtrasada(task: Task, horaAtual: string) {
   return !task.completed && task.time !== undefined && task.time < horaAtual;
+}
+
+function formatarMoeda(valor: number) {
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 export default function Index() {
@@ -27,6 +32,16 @@ export default function Index() {
   const progresso = total > 0 ? concluidas / total : 0;
   const porcentagem = Math.round(progresso * 100);
   const horaAtual = new Date().toTimeString().slice(0, 5);
+
+  // O orçamento do mês é o total de entradas
+  const entradas = transactions
+    .filter((transaction) => transaction.type === "income")
+    .reduce((soma, transaction) => soma + transaction.amount, 0);
+  const gastos = transactions
+    .filter((transaction) => transaction.type === "expense")
+    .reduce((soma, transaction) => soma + transaction.amount, 0);
+  const saldoLivre = entradas - gastos;
+  const orcamentoUtilizado = entradas > 0 ? gastos / entradas : 0;
 
   return (
     <ScrollView
@@ -81,6 +96,26 @@ export default function Index() {
             ))
           )}
         </View>
+
+        <Card>
+          <Text className="text-caption text-muted-foreground uppercase">
+            Resumo do Mês
+          </Text>
+          <View className="mt-2 flex-row justify-between">
+            <View>
+              <Text className="text-caption text-muted-foreground">Saldo livre</Text>
+              <Text className="text-title text-positive">{formatarMoeda(saldoLivre)}</Text>
+            </View>
+            <View className="items-end">
+              <Text className="text-caption text-muted-foreground">Gastos</Text>
+              <Text className="text-subtitle text-danger">{formatarMoeda(gastos)}</Text>
+            </View>
+          </View>
+          <ProgressBar value={orcamentoUtilizado} variant="positive" className="mt-3" />
+          <Text className="mt-1 text-caption text-muted-foreground">
+            {Math.round(orcamentoUtilizado * 100)}% do orçamento utilizado
+          </Text>
+        </Card>
       </View>
     </ScrollView>
   );
