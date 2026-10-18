@@ -6,6 +6,7 @@ import TaskItem from "../../src/components/TaskItem";
 import { tasks } from "../../src/mocks/tasks";
 import { transactions } from "../../src/mocks/transactions";
 import type { Task } from "../../src/types";
+import { calcularResumo, formatarMoeda } from "../../src/utils/finance";
 
 const nomeUsuario = "Emanuel";
 const iniciais = "EM";
@@ -13,10 +14,6 @@ const iniciais = "EM";
 // Horários no formato "HH:MM" podem ser comparados como texto
 function estaAtrasada(task: Task, horaAtual: string) {
   return !task.completed && task.time !== undefined && task.time < horaAtual;
-}
-
-function formatarMoeda(valor: number) {
-  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 export default function Index() {
@@ -33,15 +30,7 @@ export default function Index() {
   const porcentagem = Math.round(progresso * 100);
   const horaAtual = new Date().toTimeString().slice(0, 5);
 
-  // O orçamento do mês é o total de entradas
-  const entradas = transactions
-    .filter((transaction) => transaction.type === "income")
-    .reduce((soma, transaction) => soma + transaction.amount, 0);
-  const gastos = transactions
-    .filter((transaction) => transaction.type === "expense")
-    .reduce((soma, transaction) => soma + transaction.amount, 0);
-  const saldoLivre = entradas - gastos;
-  const orcamentoUtilizado = entradas > 0 ? gastos / entradas : 0;
+  const { totalSaidas: gastos, saldoLivre, orcamentoUtilizado } = calcularResumo(transactions);
 
   return (
     <ScrollView
