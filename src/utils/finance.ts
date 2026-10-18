@@ -1,4 +1,4 @@
-import type { Transaction, TransactionType } from "../types";
+import type { Transaction, TransactionCategory, TransactionType } from "../types";
 
 export function formatarMoeda(valor: number) {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -40,4 +40,9 @@ export function calcularGastosPorCategoria(transactions: Transaction[]) {
   return Object.entries(totais)
     .map(([categoria, total]) => ({ categoria, total }))
     .sort((a, b) => b.total - a.total);
+}
+
+// Ícone da categoria pelo nome; "💸" quando a categoria não é encontrada
+export function iconeDaCategoria(nome: string, categorias: TransactionCategory[]) {
+  return categorias.find((categoria) => categoria.name === nome)?.icon ?? "💸";
 }

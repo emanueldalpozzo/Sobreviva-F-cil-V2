@@ -2,19 +2,15 @@ import { ScrollView, Text, View } from "react-native";
 import Card from "../../src/components/Card";
 import FloatingButton from "../../src/components/FloatingButton";
 import ProgressBar from "../../src/components/ProgressBar";
+import { transactionCategories } from "../../src/mocks/categories";
 import { transactions } from "../../src/mocks/transactions";
-import { calcularGastosPorCategoria, calcularResumo, formatarMoeda } from "../../src/utils/finance";
+import {
+  calcularGastosPorCategoria,
+  calcularResumo,
+  formatarMoeda,
+  iconeDaCategoria,
+} from "../../src/utils/finance";
 import { capitalizar } from "../../src/utils/text";
-
-const iconesPorCategoria: Record<string, string> = {
-  Renda: "💰",
-  Moradia: "🏠",
-  Alimentação: "🛒",
-  Transporte: "🚗",
-  Lazer: "🎬",
-  Saúde: "💊",
-  Outros: "📦",
-};
 
 // "2026-09-05" → "05/09", sem converter para Date
 function formatarDiaMes(data: string) {
@@ -116,7 +112,7 @@ export default function Financas() {
                   >
                     <View className="h-10 w-10 items-center justify-center rounded-full bg-muted">
                       <Text className="text-body">
-                        {iconesPorCategoria[transaction.category] ?? "💸"}
+                        {iconeDaCategoria(transaction.category, transactionCategories)}
                       </Text>
                     </View>
                     <View className="flex-1">
