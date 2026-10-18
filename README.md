@@ -157,7 +157,7 @@ erDiagram
 O projeto separa **rotas** de **código de apoio**:
 
 *   **`app/`** contém somente as telas e os arquivos `_layout.tsx`. O **Expo Router** utiliza roteamento baseado em arquivos, ou seja, cada arquivo dentro de `app/` se torna uma rota do aplicativo.
-*   **`src/`** contém todo o código que não é uma tela: componentes, acesso ao banco, tipos e constantes.
+*   **`src/`** contém todo o código que não é uma tela: componentes, funções utilitárias, dados simulados, tipos e, a partir do Sprint 3, o acesso ao banco.
 
 #### Estrutura de pastas
 
@@ -172,13 +172,18 @@ Sobreviva-F-cil-V2/
 │   │   └── financas.tsx        # Controle Financeiro
 │   ├── nova-tarefa.tsx         # Tela de Stack
 │   └── nova-transacao.tsx      # Tela de Stack
-├── src/                        # Código de apoio (criado conforme a necessidade)
+├── src/                        # Código de apoio
 │   ├── components/             # Componentes reutilizáveis
-│   ├── database/               # Conexão, criação de tabelas e carga inicial
-│   ├── repositories/           # Funções de consulta e escrita por entidade
-│   ├── hooks/                  # Lógica de estado reutilizável
-│   ├── types/                  # Interfaces e tipos TypeScript
-│   └── constants/              # Cores, espaçamentos e demais constantes
+│   │   ├── Card.tsx
+│   │   ├── FloatingButton.tsx
+│   │   ├── ProgressBar.tsx
+│   │   └── TaskItem.tsx
+│   ├── mocks/                  # Dados simulados (tarefas, transações e categorias)
+│   ├── types/                  # Interfaces e tipos TypeScript das entidades
+│   ├── utils/                  # Funções de cálculo e formatação usadas pelas telas
+│   ├── database/               # (Sprint 3) Conexão, criação de tabelas e carga inicial
+│   ├── repositories/           # (Sprint 3) Funções de consulta e escrita por entidade
+│   └── hooks/                  # (Sprint 4) Estado e lógica compartilhados entre telas
 ├── assets/                     # Ícones e imagens do aplicativo
 ├── img/                        # Imagens da documentação
 ├── global.css                  # Diretivas do Tailwind (NativeWind)
@@ -188,16 +193,19 @@ Sobreviva-F-cil-V2/
 └── nativewind-env.d.ts         # Tipagem da propriedade className
 ```
 
-A pasta `src/` ainda não possui arquivos no repositório: cada subpasta será criada somente quando houver código para ela.
+As pastas `database/`, `repositories/` e `hooks/` ainda não existem: cada uma será criada somente quando houver código para ela.
 
-| Pasta | Responsabilidade | Previsão |
+| Pasta | Responsabilidade | Situação |
 |---|---|---|
-| `src/components/` | Elementos de interface reutilizados em mais de uma tela | Sprint 2 |
-| `src/constants/` | Cores, tipografia e espaçamentos | Sprint 2 |
+| `src/components/` | Elementos de interface reutilizados em mais de uma tela | Criada no Sprint 2 |
+| `src/mocks/` | Dados simulados usados pelas telas até a integração com o banco | Criada no Sprint 2 (substituída pelo banco até o Sprint 6) |
+| `src/types/` | Tipos das entidades (`Task`, `Transaction`, `TransactionCategory`) | Criada no Sprint 2 |
+| `src/utils/` | Cálculos (resumo financeiro, tarefa atrasada) e formatação (moeda, texto) | Criada no Sprint 2 |
 | `src/database/` | Abertura do SQLite, criação das tabelas e carga inicial | Sprint 3 |
-| `src/types/` | Tipos das entidades (`Task`, `Transaction`, `Tip`...) | Sprint 3 |
 | `src/repositories/` | Operações de leitura e escrita de cada entidade | Sprint 3 e 4 |
-| `src/hooks/` | Estado e lógica compartilhados entre telas | Conforme a necessidade |
+| `src/hooks/` | Estado e lógica compartilhados entre telas | Sprint 4 |
+
+As cores, a tipografia e os raios de borda não ficam em `src/`: eles são tokens de design definidos no `tailwind.config.js`.
 
 #### Fluxo entre as camadas
 
@@ -210,12 +218,15 @@ flowchart LR
 
 As telas não executam comandos SQL diretamente. Elas utilizam hooks, que chamam os repositórios, que por sua vez acessam o banco. Dessa forma, uma alteração no banco não exige a reescrita das telas.
 
+No Sprint 2, antes da existência do banco, as telas leem os dados de `src/mocks/` e delegam os cálculos às funções de `src/utils/`. A partir do Sprint 3, os dados simulados são substituídos pelos repositórios, sem alterar as funções de cálculo.
+
 #### Decisões e justificativas
 
 *   **Rotas separadas do restante do código:** no Expo Router, todo arquivo dentro de `app/` é interpretado como uma rota. Colocar código de acesso a dados ali geraria rotas indesejadas.
 *   **Sem separação entre frontend e backend:** o aplicativo utiliza **SQLite local** e funciona offline. Não existe servidor, então a camada de dados é apenas uma pasta dentro do próprio aplicativo.
 *   **`src/` ao lado de `app/`:** mantém a estrutura de rotas já existente e concentra todo o código de apoio em um único lugar.
 *   **Pastas criadas sob demanda:** evita uma estrutura vazia que poderia ser alterada ao longo do desenvolvimento.
+*   **Cálculos fora das telas:** as telas Início e Finanças exibem os mesmos valores (saldo, entradas e gastos) porque usam as mesmas funções de `src/utils/finance.ts`, em vez de repetir o cálculo em cada tela.
 *   **Estilização com NativeWind:** o protótipo foi desenvolvido com Tailwind. O NativeWind permite estilizar os componentes do React Native com a mesma nomenclatura de classes e concentrar os tokens de design (cores, tipografia e espaçamentos) em um único arquivo, o `tailwind.config.js`. Foi adotada a versão 4.2.7, estável e compatível com o Expo SDK 57, em conjunto com o Tailwind CSS 3.x.
 
 #### Alternativas consideradas
