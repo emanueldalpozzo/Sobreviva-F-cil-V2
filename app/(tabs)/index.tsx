@@ -1,11 +1,12 @@
 import { Text, View } from 'react-native';
 import Card from '../../src/components/Card';
 import ProgressBar from '../../src/components/ProgressBar';
-
-const concluidas = 1;
-const total = 3;
+import { tasks } from '../../src/mocks/tasks';
 
 export default function Index() {
+  const tarefasDoDia = tasks.filter((task) => task.frequency === 'daily');
+  const concluidas = tarefasDoDia.filter((task) => task.completed).length;
+  const total = tarefasDoDia.length;
   const progresso = total > 0 ? concluidas / total : 0;
   const porcentagem = Math.round(progresso * 100);
 
