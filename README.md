@@ -258,14 +258,23 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 
 **Objetivo:** definir a experiência visual e implementar a primeira versão das interfaces.
 
-- [ ] Criar os protótipos das telas no **Figma**.
-- [ ] Definir o fluxo de navegação entre as telas.
-- [ ] Definir cores, tipografia, espaçamentos e demais elementos visuais.
-- [ ] Implementar as interfaces das telas principais.
-- [ ] Criar componentes React reutilizáveis.
-- [ ] Implementar listas e formulários necessários para as funcionalidades.
-- [ ] Utilizar dados simulados para validar a interface.
+- [x] Criar os protótipos das telas no **v0.dev** (o planejamento inicial previa o Figma).
+- [ ] Definir e documentar o fluxo de navegação entre as telas.
+- [x] Definir cores, tipografia, espaçamentos e demais elementos visuais.
+- [x] Implementar as interfaces das telas principais (**Início**, **Tarefas** e **Finanças**).
+- [x] Criar componentes React reutilizáveis.
+- [x] Implementar as listas necessárias para as funcionalidades.
+- [ ] Implementar os formulários de **Nova Tarefa** e **Nova Transação**.
+- [x] Utilizar dados simulados para validar a interface.
 - [ ] Revisar a experiência de navegação e usabilidade.
+
+**Tarefas adicionadas durante o sprint:**
+
+- [x] Configurar o **NativeWind** para estilizar os componentes com classes Tailwind.
+- [x] Definir os tokens de design do protótipo no `tailwind.config.js`.
+- [x] Criar os tipos TypeScript das entidades (`src/types/`).
+- [x] Criar funções utilitárias compartilhadas entre as telas (`src/utils/`).
+- [ ] Remover os arquivos do template inicial que não são mais utilizados (`App.tsx` e `index.ts`).
 
 #### Sprint 3: Modelagem e Persistência de Dados (Semana 3)
 
@@ -281,6 +290,12 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Criar as funções de acesso e manipulação dos dados.
 - [ ] Validar a criação e persistência dos dados localmente.
 
+**Tarefas adicionadas a partir do Sprint 2:**
+
+- [ ] Incluir o campo de horário (opcional) na tabela `TASK`, previsto no protótipo.
+- [ ] Incluir o ícone na tabela `TRANSACTION_CATEGORY`.
+- [ ] Ligar as transações às categorias pela chave estrangeira `category_id` (nos dados simulados, a ligação é feita pelo nome).
+
 #### Sprint 4: Implementação da Rotina e Tarefas (Semana 4)
 
 **Objetivo:** implementar a principal funcionalidade do aplicativo: o gerenciamento da rotina doméstica.
@@ -294,6 +309,11 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Implementar o histórico de conclusão das tarefas recorrentes.
 - [ ] Calcular e exibir o progresso da rotina.
 - [ ] Validar a persistência das alterações realizadas pelo usuário.
+
+**Tarefas adicionadas a partir do Sprint 2:**
+
+- [ ] Tornar funcionais os filtros por categoria e por frequência da tela Tarefas.
+- [ ] Gerenciar o estado compartilhado entre as telas com **Zustand** (ex.: concluir uma tarefa atualiza o progresso da tela Início).
 
 #### Sprint 5: Funcionalidades Complementares (Semana 5)
 
@@ -309,6 +329,10 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Implementar os cálculos e resumos financeiros.
 - [ ] Integrar todas as funcionalidades ao banco SQLite.
 
+**Tarefas adicionadas a partir do Sprint 2:**
+
+- [ ] Substituir as barras de gastos por categoria por um gráfico, utilizando uma biblioteca compatível com o Expo.
+
 #### Sprint 6: Testes, Refinamento e Entrega (Semana 6)
 
 **Objetivo:** garantir a estabilidade do aplicativo e preparar a versão final para entrega.
@@ -321,6 +345,7 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Corrigir bugs encontrados durante os testes.
 - [ ] Revisar estados de carregamento, listas vazias e mensagens de erro.
 - [ ] Revisar a interface e a experiência de usuário.
+- [ ] Revisar o contraste das cores de texto (acessibilidade).
 - [ ] Atualizar a documentação do projeto.
 - [ ] Atualizar o README com o estado final do aplicativo.
 - [ ] Preparar a versão final para entrega.
