@@ -4,10 +4,16 @@ import type { Task } from "../types";
 interface TaskItemProps {
   task: Task;
   overdue?: boolean;
+  categoryClassName?: string;
   className?: string;
 }
 
-export default function TaskItem({ task, overdue = false, className }: TaskItemProps) {
+export default function TaskItem({
+  task,
+  overdue = false,
+  categoryClassName = "text-muted-foreground",
+  className,
+}: TaskItemProps) {
   const containerStyle = task.completed
     ? "border-border bg-card opacity-60"
     : overdue
@@ -32,7 +38,7 @@ export default function TaskItem({ task, overdue = false, className }: TaskItemP
       <View className="flex-1">
         <Text className={`text-body font-semibold ${titleStyle}`}>{task.title}</Text>
         <Text className="text-caption text-muted-foreground">
-          {task.category}
+          <Text className={`font-semibold ${categoryClassName}`}>{task.category}</Text>
           {task.time ? ` · ${task.time}` : ""}
         </Text>
       </View>
