@@ -5,17 +5,12 @@ import ProgressBar from "../../src/components/ProgressBar";
 import TaskItem from "../../src/components/TaskItem";
 import { tasks } from "../../src/mocks/tasks";
 import { transactions } from "../../src/mocks/transactions";
-import type { Task } from "../../src/types";
 import { calcularResumo, formatarMoeda } from "../../src/utils/finance";
+import { estaAtrasada, obterHoraAtual } from "../../src/utils/tasks";
 import { capitalizar } from "../../src/utils/text";
 
 const nomeUsuario = "Emanuel";
 const iniciais = "EM";
-
-// Horários no formato "HH:MM" podem ser comparados como texto
-function estaAtrasada(task: Task, horaAtual: string) {
-  return !task.completed && task.time !== undefined && task.time < horaAtual;
-}
 
 export default function Index() {
   const dataDeHoje = capitalizar(
@@ -31,7 +26,7 @@ export default function Index() {
   const total = tarefasDoDia.length;
   const progresso = total > 0 ? concluidas / total : 0;
   const porcentagem = Math.round(progresso * 100);
-  const horaAtual = new Date().toTimeString().slice(0, 5);
+  const horaAtual = obterHoraAtual();
 
   const { totalSaidas: gastos, saldoLivre, orcamentoUtilizado } = calcularResumo(transactions);
 
