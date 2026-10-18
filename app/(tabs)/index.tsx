@@ -6,6 +6,8 @@ import TaskItem from "../../src/components/TaskItem";
 import { tasks } from "../../src/mocks/tasks";
 import { transactions } from "../../src/mocks/transactions";
 import type { Task } from "../../src/types";
+import { calcularResumo, formatarMoeda } from "../../src/utils/finance";
+import { capitalizar } from "../../src/utils/text";
 
 const nomeUsuario = "Emanuel";
 const iniciais = "EM";
@@ -15,16 +17,14 @@ function estaAtrasada(task: Task, horaAtual: string) {
   return !task.completed && task.time !== undefined && task.time < horaAtual;
 }
 
-function formatarMoeda(valor: number) {
-  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-}
-
 export default function Index() {
-  const dataDeHoje = new Date().toLocaleDateString("pt-BR", {
-    weekday: "long",
-    day: "numeric",
-    month: "short",
-  });
+  const dataDeHoje = capitalizar(
+    new Date().toLocaleDateString("pt-BR", {
+      weekday: "long",
+      day: "numeric",
+      month: "short",
+    }),
+  );
 
   const tarefasDoDia = tasks.filter((task) => task.frequency === "daily");
   const concluidas = tarefasDoDia.filter((task) => task.completed).length;
@@ -33,15 +33,7 @@ export default function Index() {
   const porcentagem = Math.round(progresso * 100);
   const horaAtual = new Date().toTimeString().slice(0, 5);
 
-  // O orçamento do mês é o total de entradas
-  const entradas = transactions
-    .filter((transaction) => transaction.type === "income")
-    .reduce((soma, transaction) => soma + transaction.amount, 0);
-  const gastos = transactions
-    .filter((transaction) => transaction.type === "expense")
-    .reduce((soma, transaction) => soma + transaction.amount, 0);
-  const saldoLivre = entradas - gastos;
-  const orcamentoUtilizado = entradas > 0 ? gastos / entradas : 0;
+  const { totalSaidas: gastos, saldoLivre, orcamentoUtilizado } = calcularResumo(transactions);
 
   return (
     <ScrollView
@@ -51,7 +43,7 @@ export default function Index() {
       <View className="rounded-b-sheet bg-primary px-4 pb-8 pt-12">
         <View className="flex-row items-center justify-between">
           <View>
-            <Text className="text-caption capitalize text-primary-foreground opacity-80">
+            <Text className="text-caption text-primary-foreground opacity-80">
               {dataDeHoje}
             </Text>
             <Text className="text-title text-primary-foreground">
