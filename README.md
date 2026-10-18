@@ -349,3 +349,31 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Atualizar a documentação do projeto.
 - [ ] Atualizar o README com o estado final do aplicativo.
 - [ ] Preparar a versão final para entrega.
+
+## 6. Atualizações desde o último checkpoint
+
+Desde o checkpoint anterior, foram implementadas as telas **Início**, **Tarefas** e **Finanças**, estilizadas a partir do protótipo e populadas com dados simulados, além de quatro componentes reutilizáveis.
+
+#### Recursos dos módulos anteriores aplicados
+
+*   **Expo Router:** usei o `Stack` no layout raiz (`app/_layout.tsx`), com os títulos de header "Nova Tarefa" e "Nova Transação", e o `Tabs` no grupo de rotas `(tabs)`, com os títulos "Início", "Tarefas" e "Finanças". A navegação entre as telas usa o `Link`: "Ver todas", na tela Início, abre a aba Tarefas, e o botão `+` abre as telas Nova Tarefa e Nova Transação. As rotas tipadas (`typedRoutes`) fazem o TypeScript recusar caminhos que não existem.
+*   **NativeWind:** usei para estilizar as três telas e os componentes com classes Tailwind (`className`). As cores, a tipografia e os raios do protótipo viraram tokens no `tailwind.config.js`, usados como `bg-primary`, `text-title` e `rounded-card`.
+*   **TypeScript:** usei para tipar as props dos componentes e as entidades do app (`Task`, `Transaction` e `TransactionCategory`, em `src/types/`), com uniões de literais para os valores fixos, como a frequência (`"daily" | "weekly" | "monthly"`) e o tipo da transação (`"income" | "expense"`).
+*   **Zustand:** ainda não aplicado. Nesta etapa, nenhum estado é compartilhado entre telas; o uso está planejado para o Sprint 4.
+
+#### Componentes criados
+
+| Componente | Função | Usado em |
+|---|---|---|
+| `Card` | Contêiner com fundo, borda e cantos arredondados | Início e Finanças |
+| `ProgressBar` | Barra de progresso com valor de 0 a 1 | Início (progresso do dia e orçamento) e Finanças (gastos por categoria) |
+| `TaskItem` | Item de tarefa: pendente, atrasada ou concluída | Início e Tarefas |
+| `FloatingButton` | Botão `+` que abre uma tela | Tarefas e Finanças |
+
+#### Conceitos de componentes reutilizáveis aplicados
+
+*   **Responsabilidade única:** cada componente faz uma única coisa. O `ProgressBar` apenas desenha a barra; o texto "33% completo" é responsabilidade da tela. O `FloatingButton` apenas posiciona o botão e navega para a rota recebida.
+*   **Composição com `children`:** o `Card` não conhece o próprio conteúdo; ele o recebe pela prop `children`. Assim, o mesmo componente monta os cartões "Progresso do Dia" e "Resumo do Mês" (Início) e os cartões de Entradas, Saídas, Gastos por Categoria e Histórico (Finanças).
+*   **Props tipadas:** todos os componentes declaram uma interface de props (`CardProps`, `ProgressBarProps`, `TaskItemProps` e `FloatingButtonProps`). O `ProgressBar` aceita apenas as variantes `"primary"` e `"positive"`, o `TaskItem` recebe uma `task` do tipo `Task` e o `FloatingButton` recebe uma rota tipada (`Href`). Erros como esquecer uma prop obrigatória são detectados antes de o app rodar.
+*   **Valores padrão:** as props opcionais têm um comportamento definido quando não são informadas. O `ProgressBar` usa `variant = "primary"`, o `TaskItem` usa `overdue = false` e a categoria em cinza (`categoryClassName`), e a prop `className` opcional é combinada com as classes do componente por meio de `className ?? ""`.
+*   **Componentes de apresentação:** os componentes apenas exibem o que recebem, sem buscar dados nem aplicar regras de negócio. O `TaskItem` recebe a informação `overdue` já calculada pela tela, a partir da regra em `src/utils/tasks.ts`, e os cálculos financeiros ficam em `src/utils/finance.ts`. Por isso, os mesmos componentes continuarão funcionando quando os dados passarem a vir do SQLite.
