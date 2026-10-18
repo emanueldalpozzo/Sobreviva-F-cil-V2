@@ -1,11 +1,18 @@
+import { Link } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 import Card from "../../src/components/Card";
 import ProgressBar from "../../src/components/ProgressBar";
+import TaskItem from "../../src/components/TaskItem";
 import { tasks } from "../../src/mocks/tasks";
+import type { Task } from "../../src/types";
 
-// O app ainda não tem cadastro de usuário
 const nomeUsuario = "Emanuel";
 const iniciais = "EM";
+
+// Horários no formato "HH:MM" podem ser comparados como texto
+function estaAtrasada(task: Task, horaAtual: string) {
+  return !task.completed && task.time !== undefined && task.time < horaAtual;
+}
 
 export default function Index() {
   const dataDeHoje = new Date().toLocaleDateString("pt-BR", {
@@ -19,6 +26,7 @@ export default function Index() {
   const total = tarefasDoDia.length;
   const progresso = total > 0 ? concluidas / total : 0;
   const porcentagem = Math.round(progresso * 100);
+  const horaAtual = new Date().toTimeString().slice(0, 5);
 
   return (
     <ScrollView
@@ -56,6 +64,23 @@ export default function Index() {
             {porcentagem}% completo
           </Text>
         </Card>
+
+        <View className="gap-3">
+          <View className="flex-row items-center justify-between">
+            <Text className="text-subtitle text-foreground">Prioridades de Hoje</Text>
+            <Link href="/tarefas">
+              <Text className="text-body font-semibold text-primary">Ver todas</Text>
+            </Link>
+          </View>
+
+          {tarefasDoDia.length === 0 ? (
+            <Text className="text-body text-muted-foreground">Nenhuma tarefa para hoje.</Text>
+          ) : (
+            tarefasDoDia.map((task) => (
+              <TaskItem key={task.id} task={task} overdue={estaAtrasada(task, horaAtual)} />
+            ))
+          )}
+        </View>
       </View>
     </ScrollView>
   );
