@@ -157,7 +157,7 @@ erDiagram
 O projeto separa **rotas** de **código de apoio**:
 
 *   **`app/`** contém somente as telas e os arquivos `_layout.tsx`. O **Expo Router** utiliza roteamento baseado em arquivos, ou seja, cada arquivo dentro de `app/` se torna uma rota do aplicativo.
-*   **`src/`** contém todo o código que não é uma tela: componentes, acesso ao banco, tipos e constantes.
+*   **`src/`** contém todo o código que não é uma tela: componentes, funções utilitárias, dados simulados, tipos e, a partir do Sprint 3, o acesso ao banco.
 
 #### Estrutura de pastas
 
@@ -172,13 +172,18 @@ Sobreviva-F-cil-V2/
 │   │   └── financas.tsx        # Controle Financeiro
 │   ├── nova-tarefa.tsx         # Tela de Stack
 │   └── nova-transacao.tsx      # Tela de Stack
-├── src/                        # Código de apoio (criado conforme a necessidade)
+├── src/                        # Código de apoio
 │   ├── components/             # Componentes reutilizáveis
-│   ├── database/               # Conexão, criação de tabelas e carga inicial
-│   ├── repositories/           # Funções de consulta e escrita por entidade
-│   ├── hooks/                  # Lógica de estado reutilizável
-│   ├── types/                  # Interfaces e tipos TypeScript
-│   └── constants/              # Cores, espaçamentos e demais constantes
+│   │   ├── Card.tsx
+│   │   ├── FloatingButton.tsx
+│   │   ├── ProgressBar.tsx
+│   │   └── TaskItem.tsx
+│   ├── mocks/                  # Dados simulados (tarefas, transações e categorias)
+│   ├── types/                  # Interfaces e tipos TypeScript das entidades
+│   ├── utils/                  # Funções de cálculo e formatação usadas pelas telas
+│   ├── database/               # (Sprint 3) Conexão, criação de tabelas e carga inicial
+│   ├── repositories/           # (Sprint 3) Funções de consulta e escrita por entidade
+│   └── hooks/                  # (Sprint 4) Estado e lógica compartilhados entre telas
 ├── assets/                     # Ícones e imagens do aplicativo
 ├── img/                        # Imagens da documentação
 ├── global.css                  # Diretivas do Tailwind (NativeWind)
@@ -188,16 +193,19 @@ Sobreviva-F-cil-V2/
 └── nativewind-env.d.ts         # Tipagem da propriedade className
 ```
 
-A pasta `src/` ainda não possui arquivos no repositório: cada subpasta será criada somente quando houver código para ela.
+As pastas `database/`, `repositories/` e `hooks/` ainda não existem: cada uma será criada somente quando houver código para ela.
 
-| Pasta | Responsabilidade | Previsão |
+| Pasta | Responsabilidade | Situação |
 |---|---|---|
-| `src/components/` | Elementos de interface reutilizados em mais de uma tela | Sprint 2 |
-| `src/constants/` | Cores, tipografia e espaçamentos | Sprint 2 |
+| `src/components/` | Elementos de interface reutilizados em mais de uma tela | Criada no Sprint 2 |
+| `src/mocks/` | Dados simulados usados pelas telas até a integração com o banco | Criada no Sprint 2 (substituída pelo banco até o Sprint 6) |
+| `src/types/` | Tipos das entidades (`Task`, `Transaction`, `TransactionCategory`) | Criada no Sprint 2 |
+| `src/utils/` | Cálculos (resumo financeiro, tarefa atrasada) e formatação (moeda, texto) | Criada no Sprint 2 |
 | `src/database/` | Abertura do SQLite, criação das tabelas e carga inicial | Sprint 3 |
-| `src/types/` | Tipos das entidades (`Task`, `Transaction`, `Tip`...) | Sprint 3 |
 | `src/repositories/` | Operações de leitura e escrita de cada entidade | Sprint 3 e 4 |
-| `src/hooks/` | Estado e lógica compartilhados entre telas | Conforme a necessidade |
+| `src/hooks/` | Estado e lógica compartilhados entre telas | Sprint 4 |
+
+As cores, a tipografia e os raios de borda não ficam em `src/`: eles são tokens de design definidos no `tailwind.config.js`.
 
 #### Fluxo entre as camadas
 
@@ -210,12 +218,15 @@ flowchart LR
 
 As telas não executam comandos SQL diretamente. Elas utilizam hooks, que chamam os repositórios, que por sua vez acessam o banco. Dessa forma, uma alteração no banco não exige a reescrita das telas.
 
+No Sprint 2, antes da existência do banco, as telas leem os dados de `src/mocks/` e delegam os cálculos às funções de `src/utils/`. A partir do Sprint 3, os dados simulados são substituídos pelos repositórios, sem alterar as funções de cálculo.
+
 #### Decisões e justificativas
 
 *   **Rotas separadas do restante do código:** no Expo Router, todo arquivo dentro de `app/` é interpretado como uma rota. Colocar código de acesso a dados ali geraria rotas indesejadas.
 *   **Sem separação entre frontend e backend:** o aplicativo utiliza **SQLite local** e funciona offline. Não existe servidor, então a camada de dados é apenas uma pasta dentro do próprio aplicativo.
 *   **`src/` ao lado de `app/`:** mantém a estrutura de rotas já existente e concentra todo o código de apoio em um único lugar.
 *   **Pastas criadas sob demanda:** evita uma estrutura vazia que poderia ser alterada ao longo do desenvolvimento.
+*   **Cálculos fora das telas:** as telas Início e Finanças exibem os mesmos valores (saldo, entradas e gastos) porque usam as mesmas funções de `src/utils/finance.ts`, em vez de repetir o cálculo em cada tela.
 *   **Estilização com NativeWind:** o protótipo foi desenvolvido com Tailwind. O NativeWind permite estilizar os componentes do React Native com a mesma nomenclatura de classes e concentrar os tokens de design (cores, tipografia e espaçamentos) em um único arquivo, o `tailwind.config.js`. Foi adotada a versão 4.2.7, estável e compatível com o Expo SDK 57, em conjunto com o Tailwind CSS 3.x.
 
 #### Alternativas consideradas
@@ -247,14 +258,23 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 
 **Objetivo:** definir a experiência visual e implementar a primeira versão das interfaces.
 
-- [ ] Criar os protótipos das telas no **Figma**.
-- [ ] Definir o fluxo de navegação entre as telas.
-- [ ] Definir cores, tipografia, espaçamentos e demais elementos visuais.
-- [ ] Implementar as interfaces das telas principais.
-- [ ] Criar componentes React reutilizáveis.
-- [ ] Implementar listas e formulários necessários para as funcionalidades.
-- [ ] Utilizar dados simulados para validar a interface.
+- [x] Criar os protótipos das telas no **v0.dev** (o planejamento inicial previa o Figma).
+- [ ] Definir e documentar o fluxo de navegação entre as telas.
+- [x] Definir cores, tipografia, espaçamentos e demais elementos visuais.
+- [x] Implementar as interfaces das telas principais (**Início**, **Tarefas** e **Finanças**).
+- [x] Criar componentes React reutilizáveis.
+- [x] Implementar as listas necessárias para as funcionalidades.
+- [ ] Implementar os formulários de **Nova Tarefa** e **Nova Transação**.
+- [x] Utilizar dados simulados para validar a interface.
 - [ ] Revisar a experiência de navegação e usabilidade.
+
+**Tarefas adicionadas durante o sprint:**
+
+- [x] Configurar o **NativeWind** para estilizar os componentes com classes Tailwind.
+- [x] Definir os tokens de design do protótipo no `tailwind.config.js`.
+- [x] Criar os tipos TypeScript das entidades (`src/types/`).
+- [x] Criar funções utilitárias compartilhadas entre as telas (`src/utils/`).
+- [ ] Remover os arquivos do template inicial que não são mais utilizados (`App.tsx` e `index.ts`).
 
 #### Sprint 3: Modelagem e Persistência de Dados (Semana 3)
 
@@ -270,6 +290,12 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Criar as funções de acesso e manipulação dos dados.
 - [ ] Validar a criação e persistência dos dados localmente.
 
+**Tarefas adicionadas a partir do Sprint 2:**
+
+- [ ] Incluir o campo de horário (opcional) na tabela `TASK`, previsto no protótipo.
+- [ ] Incluir o ícone na tabela `TRANSACTION_CATEGORY`.
+- [ ] Ligar as transações às categorias pela chave estrangeira `category_id` (nos dados simulados, a ligação é feita pelo nome).
+
 #### Sprint 4: Implementação da Rotina e Tarefas (Semana 4)
 
 **Objetivo:** implementar a principal funcionalidade do aplicativo: o gerenciamento da rotina doméstica.
@@ -283,6 +309,11 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Implementar o histórico de conclusão das tarefas recorrentes.
 - [ ] Calcular e exibir o progresso da rotina.
 - [ ] Validar a persistência das alterações realizadas pelo usuário.
+
+**Tarefas adicionadas a partir do Sprint 2:**
+
+- [ ] Tornar funcionais os filtros por categoria e por frequência da tela Tarefas.
+- [ ] Gerenciar o estado compartilhado entre as telas com **Zustand** (ex.: concluir uma tarefa atualiza o progresso da tela Início).
 
 #### Sprint 5: Funcionalidades Complementares (Semana 5)
 
@@ -298,6 +329,10 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Implementar os cálculos e resumos financeiros.
 - [ ] Integrar todas as funcionalidades ao banco SQLite.
 
+**Tarefas adicionadas a partir do Sprint 2:**
+
+- [ ] Substituir as barras de gastos por categoria por um gráfico, utilizando uma biblioteca compatível com o Expo.
+
 #### Sprint 6: Testes, Refinamento e Entrega (Semana 6)
 
 **Objetivo:** garantir a estabilidade do aplicativo e preparar a versão final para entrega.
@@ -310,6 +345,35 @@ O desenvolvimento do **Sobreviva Fácil** está planejado para ocorrer ao longo 
 - [ ] Corrigir bugs encontrados durante os testes.
 - [ ] Revisar estados de carregamento, listas vazias e mensagens de erro.
 - [ ] Revisar a interface e a experiência de usuário.
+- [ ] Revisar o contraste das cores de texto (acessibilidade).
 - [ ] Atualizar a documentação do projeto.
 - [ ] Atualizar o README com o estado final do aplicativo.
 - [ ] Preparar a versão final para entrega.
+
+## 6. Atualizações desde o último checkpoint
+
+Desde o checkpoint anterior, foram implementadas as telas **Início**, **Tarefas** e **Finanças**, estilizadas a partir do protótipo e populadas com dados simulados, além de quatro componentes reutilizáveis.
+
+#### Recursos dos módulos anteriores aplicados
+
+*   **Expo Router:** usei o `Stack` no layout raiz (`app/_layout.tsx`), com os títulos de header "Nova Tarefa" e "Nova Transação", e o `Tabs` no grupo de rotas `(tabs)`, com os títulos "Início", "Tarefas" e "Finanças". A navegação entre as telas usa o `Link`: "Ver todas", na tela Início, abre a aba Tarefas, e o botão `+` abre as telas Nova Tarefa e Nova Transação. As rotas tipadas (`typedRoutes`) fazem o TypeScript recusar caminhos que não existem.
+*   **NativeWind:** usei para estilizar as três telas e os componentes com classes Tailwind (`className`). As cores, a tipografia e os raios do protótipo viraram tokens no `tailwind.config.js`, usados como `bg-primary`, `text-title` e `rounded-card`.
+*   **TypeScript:** usei para tipar as props dos componentes e as entidades do app (`Task`, `Transaction` e `TransactionCategory`, em `src/types/`), com uniões de literais para os valores fixos, como a frequência (`"daily" | "weekly" | "monthly"`) e o tipo da transação (`"income" | "expense"`).
+*   **Zustand:** ainda não aplicado. Nesta etapa, nenhum estado é compartilhado entre telas; o uso está planejado para o Sprint 4.
+
+#### Componentes criados
+
+| Componente | Função | Usado em |
+|---|---|---|
+| `Card` | Contêiner com fundo, borda e cantos arredondados | Início e Finanças |
+| `ProgressBar` | Barra de progresso com valor de 0 a 1 | Início (progresso do dia e orçamento) e Finanças (gastos por categoria) |
+| `TaskItem` | Item de tarefa: pendente, atrasada ou concluída | Início e Tarefas |
+| `FloatingButton` | Botão `+` que abre uma tela | Tarefas e Finanças |
+
+#### Conceitos de componentes reutilizáveis aplicados
+
+*   **Responsabilidade única:** cada componente faz uma única coisa. O `ProgressBar` apenas desenha a barra; o texto "33% completo" é responsabilidade da tela. O `FloatingButton` apenas posiciona o botão e navega para a rota recebida.
+*   **Composição com `children`:** o `Card` não conhece o próprio conteúdo; ele o recebe pela prop `children`. Assim, o mesmo componente monta os cartões "Progresso do Dia" e "Resumo do Mês" (Início) e os cartões de Entradas, Saídas, Gastos por Categoria e Histórico (Finanças).
+*   **Props tipadas:** todos os componentes declaram uma interface de props (`CardProps`, `ProgressBarProps`, `TaskItemProps` e `FloatingButtonProps`). O `ProgressBar` aceita apenas as variantes `"primary"` e `"positive"`, o `TaskItem` recebe uma `task` do tipo `Task` e o `FloatingButton` recebe uma rota tipada (`Href`). Erros como esquecer uma prop obrigatória são detectados antes de o app rodar.
+*   **Valores padrão:** as props opcionais têm um comportamento definido quando não são informadas. O `ProgressBar` usa `variant = "primary"`, o `TaskItem` usa `overdue = false` e a categoria em cinza (`categoryClassName`), e a prop `className` opcional é combinada com as classes do componente por meio de `className ?? ""`.
+*   **Componentes de apresentação:** os componentes apenas exibem o que recebem, sem buscar dados nem aplicar regras de negócio. O `TaskItem` recebe a informação `overdue` já calculada pela tela, a partir da regra em `src/utils/tasks.ts`, e os cálculos financeiros ficam em `src/utils/finance.ts`. Por isso, os mesmos componentes continuarão funcionando quando os dados passarem a vir do SQLite.
