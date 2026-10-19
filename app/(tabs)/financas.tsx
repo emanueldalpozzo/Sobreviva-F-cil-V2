@@ -12,14 +12,12 @@ import {
 } from "../../src/utils/finance";
 import { capitalizar } from "../../src/utils/text";
 
-// "2026-09-05" → "05/09", sem converter para Date
+
 function formatarDiaMes(data: string) {
   const [, mes, dia] = data.split("-");
   return `${dia}/${mes}`;
 }
 
-// "2026-09-05" → "Setembro 2026". O meio-dia evita que o fuso horário
-// mude a data para o dia (e o mês) anterior.
 function formatarMesAno(data: string) {
   const referencia = new Date(`${data}T12:00:00`);
   const mes = capitalizar(referencia.toLocaleDateString("pt-BR", { month: "long" }));

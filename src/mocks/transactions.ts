@@ -1,7 +1,5 @@
 import type { Transaction } from "../types";
 
-// Transações do protótipo (setembro de 2026):
-// 3 entradas somando R$ 2.180,00 e 6 saídas somando R$ 1.181,90
 export const transactions: Transaction[] = [
   { id: "transaction-1", title: "Salário", amount: 1800, type: "income", category: "Renda", date: "2026-09-01" },
   { id: "transaction-2", title: "Aluguel", amount: 800, type: "expense", category: "Moradia", date: "2026-09-05" },

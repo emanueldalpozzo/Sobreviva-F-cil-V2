@@ -4,7 +4,7 @@ import TaskItem from "../../src/components/TaskItem";
 import { tasks } from "../../src/mocks/tasks";
 import { estaAtrasada, obterHoraAtual } from "../../src/utils/tasks";
 
-// Classes completas para o Tailwind encontrá-las no código-fonte
+
 const corPorCategoria: Record<string, string> = {
   Casa: "text-primary",
   Compras: "text-accent-foreground",
